@@ -828,7 +828,9 @@ require('lazy').setup({
     lazy = false,
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
-      require('nvim-tree').setup()
+      require('nvim-tree').setup {
+        git = { timeout = 5000 },
+      }
     end,
   },
 
@@ -915,6 +917,53 @@ require('lazy').setup({
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
+  {
+    'bluz71/vim-moonfly-colors',
+    name = 'moonfly',
+    lazy = false,
+    priority = 1000,
+  },
+  {
+    'catppuccin/nvim',
+    name = 'catppuccin',
+    priority = 1000,
+    lazy = false,
+    opts = {
+      no_italic = true,
+      term_colors = true,
+      transparent_background = false,
+      styles = {
+        comments = {},
+        conditionals = {},
+        loops = {},
+        functions = {},
+        keywords = {},
+        strings = {},
+        variables = {},
+        numbers = {},
+        booleans = {},
+        properties = {},
+        types = {},
+      },
+      color_overrides = {
+        mocha = {
+          base = '#000000',
+          mantle = '#000000',
+          crust = '#000000',
+        },
+      },
+      integrations = {
+        telescope = {
+          enabled = true,
+          style = 'nvchad',
+        },
+        dropbar = {
+          enabled = true,
+          color_mode = true,
+        },
+      },
+    },
+  },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
@@ -966,7 +1015,7 @@ vim.opt.tabstop = 8
 vim.opt.softtabstop = 2
 vim.opt.shiftwidth = 2
 
-vim.cmd [[colorscheme torte]]
+vim.cmd [[colorscheme catppuccin]]
 
 vim.api.nvim_create_autocmd({ 'BufWritePre', 'InsertLeave' }, {
   pattern = { '*.c', '*.cpp', '*.h', '*.hpp' },
