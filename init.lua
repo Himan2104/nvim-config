@@ -1018,7 +1018,7 @@ vim.opt.shiftwidth = 2
 vim.cmd [[colorscheme catppuccin]]
 
 vim.api.nvim_create_autocmd({ 'BufWritePre', 'InsertLeave' }, {
-  pattern = { '*.c', '*.cpp', '*.h', '*.hpp' },
+  pattern = { '*.c', '*.cpp', '*.cxx', '*.h', '*.hpp', '*.hxx' },
   callback = function()
     vim.lsp.buf.format()
   end,
