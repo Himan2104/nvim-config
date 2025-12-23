@@ -606,6 +606,7 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         clangd = {},
+        neocmake = {},
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
@@ -823,16 +824,6 @@ require('lazy').setup({
       }
     end,
   },
-  {
-    'nvim-tree/nvim-tree.lua',
-    lazy = false,
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
-    config = function()
-      require('nvim-tree').setup {
-        git = { timeout = 5000 },
-      }
-    end,
-  },
 
   { -- You can easily change to a different colorscheme.
     -- Change the name of the colorscheme plugin below, and then
@@ -974,12 +965,12 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -991,21 +982,7 @@ require('lazy').setup({
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
     -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
-    icons = vim.g.have_nerd_font and {} or {
-      cmd = '⌘',
-      config = '🛠',
-      event = '📅',
-      ft = '📂',
-      init = '⚙',
-      keys = '🗝',
-      plugin = '🔌',
-      runtime = '💻',
-      require = '🌙',
-      source = '📄',
-      start = '🚀',
-      task = '📌',
-      lazy = '💤 ',
-    },
+    icons = vim.g.have_nerd_font and {},
   },
 })
 
@@ -1018,7 +995,7 @@ vim.opt.shiftwidth = 2
 vim.cmd [[colorscheme catppuccin]]
 
 vim.api.nvim_create_autocmd({ 'BufWritePre', 'InsertLeave' }, {
-  pattern = { '*.c', '*.cpp', '*.cxx', '*.h', '*.hpp', '*.hxx' },
+  pattern = { '*.c', '*.cpp', '*.cxx', '*.h', '*.hpp', '*.hxx', 'CMakeLists.txt', '*.cmake' },
   callback = function()
     vim.lsp.buf.format()
   end,

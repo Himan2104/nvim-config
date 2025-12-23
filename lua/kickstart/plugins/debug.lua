@@ -64,6 +64,7 @@ return {
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
+        'codelldb',
       },
     }
 
@@ -92,6 +93,38 @@ return {
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
+
+    dap.adapters.codelldb = {
+      type = 'executable',
+      name = 'codelldb',
+      command = vim.fn.stdpath('data') .. '/mason/bin/codelldb.cmd',
+      args = {},
+      attach = {
+        pidProperty = 'processID',
+        pidSelect = 'ask'
+      }
+    }
+
+    dap.configurations.cpp = {
+         {
+    name = "Launch file",
+    type = "codelldb",
+    request = "launch",
+    program = function()
+      -- Prompt user to enter the path to the executable
+      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+    end,
+    cwd = '${workspaceFolder}',
+    stopOnEntry = true,
+    setupCommands = {
+      {
+        text = '-enable-pretty-printing',
+        description = 'Enable GDB pretty printing',
+        ignoreFailures = false
+      }
+      },
+      },
+    }
 
     -- Install golang specific config
     require('dap-go').setup {
