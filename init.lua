@@ -335,7 +335,6 @@ require('lazy').setup({
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
-    branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
       { -- If encountering errors, see telescope-fzf-native README for installation instructions
@@ -605,8 +604,31 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        clangd = {},
-        neocmake = {},
+        clangd = {
+          init_options = {
+            fallbackFlags = {
+              '-std=c++23',
+            },
+          },
+        },
+        neocmake = {
+          cmd = { 'neocmakelsp', '--stdio' },
+          filetypes = { 'cmake' },
+          root_dir = function(fname)
+            return nvim_lsp.util.find_git_ancestor(fname)
+          end,
+          single_file_support = true, -- suggested
+          on_attach = on_attach, -- on_attach is the on_attach function you defined
+          init_options = {
+            format = {
+              enable = true,
+            },
+            lint = {
+              enable = true,
+            },
+            scan_cmake_in_package = true, -- default is true
+          },
+        },
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
@@ -886,7 +908,7 @@ require('lazy').setup({
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
-    main = 'nvim-treesitter.configs', -- Sets main module to use for opts
+    main = 'nvim-treesitter.config', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
       ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
@@ -955,6 +977,26 @@ require('lazy').setup({
       },
     },
   },
+  {
+    '2kabhishek/nerdy.nvim',
+    dependencies = {
+      'folke/snacks.nvim',
+    },
+    cmd = 'Nerdy',
+    opts = {
+      max_recents = 30, -- Configure recent icons limit
+      copy_to_clipboard = false, -- Copy glyph to clipboard instead of inserting
+      copy_register = '+', -- Register to use for copying (if `copy_to_clipboard` is true)
+    },
+    keys = {
+      { '<leader>in', ':Nerdy list<CR>', desc = 'Browse nerd icons' },
+      { '<leader>iN', ':Nerdy recents<CR>', desc = 'Browse recent nerd icons' },
+    },
+  },
+  {
+    'neoclide/coc.nvim',
+    branch = 'release',
+  },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
@@ -986,11 +1028,10 @@ require('lazy').setup({
   },
 })
 
-vim.o.shell = 'C://Windows/System32/WindowsPowerShell/v1.0/powershell.exe'
-
-vim.opt.tabstop = 8
-vim.opt.softtabstop = 2
-vim.opt.shiftwidth = 2
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
 
 vim.cmd [[colorscheme catppuccin]]
 
